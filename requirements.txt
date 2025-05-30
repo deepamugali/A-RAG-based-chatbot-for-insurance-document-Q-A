@@ -110,5 +110,5 @@ urllib3==1.26.20
 Werkzeug==2.2.3
 yarl==1.8.2
 zstandard==0.23.0
-torch==2.0.1+cpu 
+torch==2.0.1
 transformers
