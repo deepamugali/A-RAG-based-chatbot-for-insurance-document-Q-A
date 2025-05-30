@@ -1,0 +1,180 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RAG Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f8f8f8;
+    }
+    h1 {
+      color: #333;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 1rem 0;
+      font-size: 1rem;
+    }
+    #response {
+      white-space: pre-wrap;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      min-height: 100px;
+    }
+    button {
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #004b99;
+    }
+  </style>
+</head>
+<body>
+  <h1>📄 Insurance RAG Chatbot</h1>
+  <label for="question">Enter your question:</label>
+  <textarea id="question" rows="3" placeholder="e.g., What is the deductible for the Bronze plan?"></textarea>
+  <button onclick="ask()">Ask</button>
+
+  <h3>💬 Answer:</h3>
+  <div id="response">Waiting for input...</div>
+
+  <script>
+    async function ask() {
+      const question = document.getElementById("question").value;
+      const responseDiv = document.getElementById("response");
+      responseDiv.textContent = "⏳ Thinking...";
+
+      try {
+        const res = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: question })
+        });
+        const data = await res.json();
+        responseDiv.textContent = data.answer || "No answer returned.";
+      } catch (err) {
+        console.error(err);
+        responseDiv.textContent = "⚠️ Error connecting to the server.";
+      }
+    }
+  </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RAG Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f8f8f8;
+    }
+    h1 {
+      color: #333;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 1rem 0;
+      font-size: 1rem;
+    }
+    #response {
+      white-space: pre-wrap;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      min-height: 100px;
+    }
+    button {
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #004b99;
+    }
+    #suggestions li {
+      list-style: none;
+      padding: 0.5rem;
+      margin-bottom: 0.3rem;
+      background-color: #eef;
+      border: 1px solid #cce;
+      cursor: pointer;
+    }
+    #suggestions li:hover {
+      background-color: #dde;
+    }
+  </style>
+</head>
+<body>
+    <h1>📄 Insurance RAG Chatbot</h1>
+  
+    <label for="question">Enter your question:</label>
+    <input list="suggestions" id="question" placeholder="Start typing or choose a suggested question..." />
+  
+    <datalist id="suggestions">
+      <!-- Populated dynamically -->
+    </datalist>
+  
+    <button onclick="ask()">Ask</button>
+  
+    <h3>💬 Answer:</h3>
+    <div id="response">Waiting for input...</div>
+  
+    <script>
+      async function ask() {
+        const question = document.getElementById("question").value;
+        const responseDiv = document.getElementById("response");
+        responseDiv.textContent = "⏳ Thinking...";
+  
+        try {
+          const res = await fetch("/ask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question: question })
+          });
+          const data = await res.json();
+          responseDiv.textContent = data.answer || "No answer returned.";
+        } catch (err) {
+          console.error(err);
+          responseDiv.textContent = "⚠️ Error connecting to the server.";
+        }
+      }
+  
+      async function loadSuggestions() {
+        try {
+          const res = await fetch("/suggestions");
+          const questions = await res.json();
+          const datalist = document.getElementById("suggestions");
+  
+          questions.forEach((q) => {
+            const option = document.createElement("option");
+            option.value = q;
+            datalist.appendChild(option);
+          });
+        } catch (error) {
+          console.error("Failed to load suggestions:", error);
+        }
+      }
+  
+      window.onload = loadSuggestions;
+    </script>
+</body>
+  
+</html>
